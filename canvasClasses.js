@@ -1,11 +1,11 @@
 class Mover{
-  constructor(left, right, up, down, autoChangeDir=false){
+  constructor(left, right, up, down, canvas){
     this.left= left;
     this.right= right;
     this.up= up;
     this.down= down;
+    this.canvasRect= {x:0, y:0, width: canvas.canvas.width, height: canvas.canvas.height};
     this.dir= "none";
-    this.autoChangeDir= autoChangeDir;
     document.addEventListener("keydown", (event)=>{
               if(event.key==this.left){
                     this.dir="left";
@@ -26,43 +26,20 @@ class Mover{
     })
   }
    goLeft(data, speed){
-    if(!this.autoChangeDir){
         if(data.x<=0)return;
-    }
-    else{
-      this.dir="right";
-      return;
-    }
      data.x-=speed;
   }
     goRight(data, speed){
-          if(!this.autoChangeDir){
-        if(data.x + data.width>=canvas.canvas.width)return;
-    }
-    else{
-      this.dir="left";
-      return;
-    }
+        if(data.x + data.width>=this.canvasRect.width)return;
+
      data.x+=speed;
   }
     goUp(data, speed){
-         if(!this.autoChangeDir){
         if(data.y<=0)return;
-    }
-    else{
-      this.dir="down";
-      return;
-    }
      data.y-=speed;
   }
     goDown(data, speed){
-            if(!this.autoChangeDir){
-        if(data.y + data.height>=canvas.canvas.height)return;
-    }
-    else{
-      this.dir="up";
-      return;
-    }
+        if(data.y + data.height>=this.canvasRect.height)return;
      data.y+=speed;
   }
 }
