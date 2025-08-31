@@ -258,7 +258,6 @@ timer(){
 
 draw(canvas){
 canvas.drawImage(this.rect, this.image);
-canvas.ctx.strokeRect(this.hitRect.x, this.hitRect.y, this.hitRect.width, this.hitRect.height);
 for(var a=0;a<this.shots.length;a++){
   this.shots[a].draw(canvas);
 }
@@ -467,4 +466,5 @@ var range= max- min;
 num=  Math.ceil(Math.random()*range) + min;   
 }
 return num; 
+
 }
