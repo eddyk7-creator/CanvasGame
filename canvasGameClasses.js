@@ -128,6 +128,17 @@ class AutoMover{
      data.y+=speed;
   }
   }
+
+  returnToStart(canvas, rect){
+    if(this.dir.x=="left"){
+       rect.x= canvas.canvas.width - rect.width;
+       rect.y= getNum(0, canvas.canvas.height); 
+    }
+    else if(this.dir.x=="right"){
+       rect.x= 0;
+       rect.y= getNum(0, canvas.canvas.height); 
+    }
+  }
 }
 
 
@@ -139,6 +150,14 @@ class CanvasCreator{
         this.canvas.height= height;
         this.rect= new Rect(0, this.canvas.height-20, this.canvas.width, 20);
         this.canvas.style.border= `5px solid red`;
+        this.backgroundAdded= false;
+        this.backgroundImage=""; 
+    }
+
+    addBackground(link){
+         this.backgroundAdded= true;
+         this.backgroundImage= new Image();
+         this.backgroundImage.src= link; 
     }
 
     drawRect(rect= this.rect, color="red"){
@@ -149,6 +168,11 @@ class CanvasCreator{
 
     drawImage(rect, image){
        this.ctx.drawImage(image, rect.x, rect.y, rect.width, rect.height);
+    }
+
+    drawBackground(){
+      if(!this.backgroundAdded) return; 
+          this.ctx.drawImage(this.backgroundImage, 0, 0, this.canvas.width, this.canvas.height);
     }
 
     drawText(content, canvas, posX, posY, fontSize="50", color="blue"){
@@ -325,17 +349,17 @@ class Entity{
   }
 
   offscreen(canvas){
-      if(this.rect.x<0 || this.rect.x>= canvas.canvas.width) {
+      if(this.rect.x<=0 || this.rect.x>= canvas.canvas.width) {
         return true;
       }
-      if(this.rect.y<0 || this.rect.y>= canvas.canvas.height) {
+      if(this.rect.y<=0 || this.rect.y>= canvas.canvas.height) {
         return true;
       }
       return false; 
   }
 
   move(canvas){
-     this.mover.move(this.rect, 2, canvas);
+     this.mover.move(this.rect, this.speed, canvas);
   }
 
   hit(rect){
@@ -353,13 +377,14 @@ constructor(canvas, link, amount, movement, speed=2){
   this.link= link;
   this.amount=amount;
   this.movement= movement;
+  this.startingPos= this.movement.dir.x=="left"? this.canvas.canvas.width - 80: 0;
   this.speed=speed;
   this.create();
 }
 
 create(){
 for(var a=0;a<this.amount;a++){
-  this.entities.push(new Entity(this.movement, new Rect(getNum(100*a, 100*(a+1)), 0, 50, 50), this.link, this.speed));
+  this.entities.push(new Entity(this.movement, new Rect(this.startingPos, getNum(0, this.canvas.canvas.height-50), 50, 50), this.link, this.speed));
 }
 }
 
